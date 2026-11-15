@@ -30,7 +30,11 @@ object Gen5Text {
         }
     }
 
-    private fun decode(codes: IntArray): String {
+    /**
+     * Decode already-decrypted Gen 5 text codes. Internal visibility lets unit tests cover
+     * character handling without needing a complete encrypted ROM message-file fixture.
+     */
+    internal fun decode(codes: IntArray): String {
         val sb = StringBuilder()
         var j = 0
         while (j < codes.size) {
