@@ -11,7 +11,7 @@ class Gen5TextTest {
 
     @Test
     fun decodesLineBreaksAndStopsAtEndMarker() {
-        val codes = intArrayOf('Да'.first().code, 0xFFFE, 'Нет'.first().code, 0xFFFF, '!'.code)
+        val codes = intArrayOf('Д'.code, 0xFFFE, 'Н'.code, 0xFFFF, '!'.code)
         assertEquals("Д\nН", Gen5Text.decode(codes))
     }
 
