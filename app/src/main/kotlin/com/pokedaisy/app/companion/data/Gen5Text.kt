@@ -43,7 +43,7 @@ object Gen5Text {
         // The marker is distinctive to this Russian ROM's custom character table; English and other retail
         // localizations retain their normal Unicode text and must not have ASCII letters rewritten.
         if (russianBank == null || !isRussianBlackText(decoded)) return decoded
-        return decoded.map { mapRussian(it, russianBank) }
+        return decoded.map(::mapRussian)
     }
 
     /**
