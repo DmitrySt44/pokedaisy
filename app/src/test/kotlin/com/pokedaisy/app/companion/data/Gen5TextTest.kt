@@ -42,7 +42,7 @@ class Gen5TextTest {
     }
 
     private fun messageFile(text: String): ByteArray {
-        val codes = text.map { if (it == '\\n') 0xFFFE else it.code } + 0xFFFF
+        val codes = text.map { if (it == '\n') 0xFFFE else it.code } + 0xFFFF
         val lineOffset = 0x1C
         val file = ByteArray(lineOffset + codes.size * 2)
         fun put16(offset: Int, value: Int) {
