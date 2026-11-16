@@ -91,11 +91,7 @@ object Gen5Text {
     }
 
     internal fun isRussianBlackText(lines: List<String>): Boolean =
-        lines.any { line -> line.any { it.code in RUSSIAN_MARKERS } }
-
-    private val RUSSIAN_MARKERS = setOf(
-        0x00AA, 0x00AB, 0x00BA, 0x00BB, 0x00C1, 0x00D0, 0x00E5, 0x00EB, 0x015E,
-    )
+        lines.any { '\u00D0' in it }
 
     internal fun mapRussian(text: String): String {
         return buildString(text.length) {
