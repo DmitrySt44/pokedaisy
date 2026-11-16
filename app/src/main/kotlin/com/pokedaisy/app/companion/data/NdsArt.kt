@@ -1034,8 +1034,14 @@ object NdsArt {
             fun lines(bank: Int, russianBank: Gen5Text.RussianBank? = null) =
                 msg.member(bank)?.let { Gen5Text.lines(it, russianBank) }.orEmpty()
             val types = lines(banks.types)
-            return Names(lines(banks.species, Gen5Text.RussianBank.SPECIES_NAMES), lines(banks.moves), lines(banks.items),
-                lines(banks.places), FIGHTING[types.getOrNull(1)?.trim()?.uppercase()] ?: 'E', gen5 = true, bw2 = sequel)
+            return Names(
+                lines(banks.species, Gen5Text.RussianBank.SPECIES_NAMES),
+                lines(banks.moves, Gen5Text.RussianBank.MOVE_NAMES),
+                lines(banks.items, Gen5Text.RussianBank.ITEM_NAMES),
+                lines(banks.places, Gen5Text.RussianBank.PLACE_NAMES),
+                FIGHTING[types.getOrNull(1)?.trim()?.uppercase()] ?: 'E',
+                gen5 = true, bw2 = sequel,
+            )
         }
         val banks = when {
             code == OriginHeartGold.CODE && OriginHeartGold.matches { off, len -> f.read(off, len) } -> NAMES_ORIGIN
