@@ -59,7 +59,7 @@ class Gen5TextTest {
 
     @Test
     fun russianDetectionDoesNotTreatEnglishAsRussian() {
-        assertFalse(Gen5Text.isRussianBlackText(listOf("Stench", "Seed Pokémon")))
+        assertFalse(Gen5Text.isRussianBlackText(listOf("Stench", "Seed Pokémon", "Árbol")))
         assertTrue(Gen5Text.isRussianBlackText(listOf("Ðoëå«oº Cå«åøëo")))
     }
 }
