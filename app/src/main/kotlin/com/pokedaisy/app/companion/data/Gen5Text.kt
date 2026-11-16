@@ -7,14 +7,26 @@ package com.pokedaisy.app.companion.data
  * code, walking backwards. The codes are UTF-16 but for a few: 0xFFFF ends a line, 0xFFFE breaks it, 0xF000 starts a
  * control code (its command, an argument count and the arguments, skipped), 0xF100 starts a 9-bit packed string, and
  * 0x246D / 0x246E are ♂ / ♀. Read from the player's own cart for names and the DEX's pages: none of the text is bundled.
+ *
+ * The Russian Black translation uses a custom glyph table: its UTF-16 values are not Unicode Cyrillic. The mapping
+ * below was reconstructed by aligning the translation project's converted strings with its Russian source strings.
+ * Category labels have four additional glyphs (ª, «, º, »); in DEX descriptions « and » are literal quotation marks,
+ * so those maps intentionally differ.
  */
 object Gen5Text {
+    enum class RussianBank {
+        SPECIES_NAMES,
+        DEX_DESCRIPTIONS,
+        DEX_CATEGORIES,
+        ABILITIES,
+    }
+
     /** Every line of the message file [file]'s first section (index 0 is the game's line 0). */
-    fun lines(file: ByteArray): List<String> {
+    fun lines(file: ByteArray, russianBank: RussianBank? = null): List<String> {
         if (file.size < 0x10) return emptyList()
         val count = u16(file, 2)
         val section = u32(file, 0x0C).toInt()
-        return (0 until count).map { i ->
+        val decoded = (0 until count).map { i ->
             val e = section + 4 + i * 8
             if (e + 8 > file.size) return@map ""
             val off = section + u32(file, e).toInt()
@@ -28,6 +40,10 @@ object Gen5Text {
             }
             decode(codes)
         }
+        // The marker is distinctive to this Russian ROM's custom character table; English and other retail
+        // localizations retain their normal Unicode text and must not have ASCII letters rewritten.
+        if (russianBank == null || !isRussianBlackText(decoded)) return decoded
+        return decoded.map { mapRussian(it, russianBank) }
     }
 
     /**
@@ -73,6 +89,44 @@ object Gen5Text {
         }
         return sb.toString()
     }
+
+    internal fun isRussianBlackText(lines: List<String>): Boolean =
+        lines.any { '\u00D0' in it && '\u00EB' in it }
+
+    internal fun mapRussian(text: String, bank: RussianBank): String {
+        val table = when (bank) {
+            RussianBank.SPECIES_NAMES, RussianBank.ABILITIES -> RUSSIAN_COMMON
+            RussianBank.DEX_DESCRIPTIONS -> RUSSIAN_COMMON
+            RussianBank.DEX_CATEGORIES -> RUSSIAN_COMMON + RUSSIAN_CATEGORY_EXTRA
+        }
+        return buildString(text.length) {
+            text.forEach { append(table[it.code] ?: it) }
+        }
+    }
+
+    private val RUSSIAN_COMMON = mapOf(
+        0x0041 to 'А', 0x0043 to 'С', 0x004F to 'О',
+        0x0061 to 'а', 0x0063 to 'с', 0x006F to 'о',
+        0x00C0 to 'Ё', 0x00C1 to 'Б', 0x00C2 to 'В', 0x00C3 to 'Г',
+        0x00C4 to 'Д', 0x00C5 to 'Е', 0x00C7 to 'Ж', 0x00C8 to 'З',
+        0x00C9 to 'И', 0x00CA to 'Й', 0x00CB to 'К', 0x00CC to 'Л',
+        0x00CD to 'М', 0x00CE to 'Н', 0x00CF to 'Ц', 0x00D0 to 'П',
+        0x00D1 to 'Р', 0x00D2 to 'Ю', 0x00D3 to 'Т', 0x00D4 to 'У',
+        0x00D5 to 'Ф', 0x00D6 to 'Х', 0x00D8 to 'Ч', 0x00D9 to 'Ш',
+        0x00DA to 'Щ', 0x00DC to 'Ы', 0x00DD to 'Ь', 0x00DE to 'Э',
+        0x00E0 to 'ё', 0x00E1 to 'б', 0x00E2 to 'в', 0x00E3 to 'г',
+        0x00E4 to 'д', 0x00E5 to 'е', 0x00E7 to 'ж', 0x00E8 to 'з',
+        0x00E9 to 'и', 0x00EA to 'й', 0x00EB to 'к', 0x00EC to 'л',
+        0x00ED to 'м', 0x00EE to 'н', 0x00EF to 'ц', 0x00F0 to 'п',
+        0x00F1 to 'р', 0x00F2 to 'ю', 0x00F3 to 'т', 0x00F4 to 'у',
+        0x00F5 to 'ф', 0x00F6 to 'х', 0x00F8 to 'ч', 0x00F9 to 'ш',
+        0x00FA to 'щ', 0x00FB to 'ъ', 0x00FC to 'ы', 0x00FD to 'ь',
+        0x00FE to 'э', 0x015E to 'Я', 0x015F to 'я',
+    )
+
+    private val RUSSIAN_CATEGORY_EXTRA = mapOf(
+        0x00AA to 'л', 0x00AB to 'м', 0x00BA to 'н', 0x00BB to 'ц',
+    )
 
     private fun u16(b: ByteArray, o: Int) = (b[o].toInt() and 0xFF) or ((b[o + 1].toInt() and 0xFF) shl 8)
     private fun u32(b: ByteArray, o: Int) = (u16(b, o).toLong() or (u16(b, o + 2).toLong() shl 16))
