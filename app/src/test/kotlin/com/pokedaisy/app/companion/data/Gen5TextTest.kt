@@ -47,9 +47,10 @@ class Gen5TextTest {
     @Test
     fun decodesRussianAbilityAndSpeciesName() {
         assertEquals(
-            "ПАХУЧЕСТЬ",
-            Gen5Text.mapRussian("ÐAÖÔØÅCÓÝ"),
+            "Пахучесть",
+            Gen5Text.mapRussian("Ðaöôøåcóý"),
         )
+        assertEquals("Боевая броня", Gen5Text.mapRussian("Áoåâaş áñoîş"))
         assertEquals("Подзарядка", Gen5Text.mapRussian("Ðoäèañşäëa"))
         assertEquals(
             "Бульбазавр",
