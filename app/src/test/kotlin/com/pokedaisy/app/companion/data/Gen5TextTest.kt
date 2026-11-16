@@ -52,6 +52,9 @@ class Gen5TextTest {
         )
         assertEquals("Боевая броня", Gen5Text.mapRussian("Áoåâaş áñoîş"))
         assertEquals("Подзарядка", Gen5Text.mapRussian("Ðoäèañşäëa"))
+        assertEquals("Покебол", Gen5Text.mapRussian("Ðoëåáoì"))
+        assertEquals("Затрещина", Gen5Text.mapRussian("Èaóñåúéîa"))
+        assertEquals("Таинственная Зона", Gen5Text.mapRussian("Óaéºcóâåººaş Èoºa"))
         assertEquals(
             "Бульбазавр",
             Gen5Text.mapRussian("Áôìýáaèaâñ"),
