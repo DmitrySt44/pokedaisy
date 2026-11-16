@@ -16,6 +16,9 @@ package com.pokedaisy.app.companion.data
 object Gen5Text {
     enum class RussianBank {
         SPECIES_NAMES,
+        MOVE_NAMES,
+        ITEM_NAMES,
+        PLACE_NAMES,
         DEX_DESCRIPTIONS,
         DEX_CATEGORIES,
         ABILITIES,
