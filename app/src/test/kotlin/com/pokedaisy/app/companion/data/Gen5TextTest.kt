@@ -1,6 +1,8 @@
 package com.pokedaisy.app.companion.data
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class Gen5TextTest {
@@ -25,5 +27,42 @@ class Gen5TextTest {
     fun decodesGenderSymbols() {
         val codes = intArrayOf(0x246D, 0x246E, 0xFFFF)
         assertEquals("♂♀", Gen5Text.decode(codes))
+    }
+
+    @Test
+    fun decodesRussianPokemonCategory() {
+        assertEquals(
+            "Покемон Семечко",
+            Gen5Text.mapRussian("Ðoëå«oº Cå«åøëo", Gen5Text.RussianBank.DEX_CATEGORIES),
+        )
+    }
+
+    @Test
+    fun decodesRussianDexDescriptionAndKeepsQuotationMarks() {
+        val encoded = "Îåëoóoñoå âñåíş ðocìå ñoçäåîéş, oî\nñacóàó, ðoìôøaş ðéóaóåìýîüå âåúåcóâa\néè cåíåøëa îa åão cðéîå."
+        val expected = "Некоторое время после рождения, он\nрастёт, получая питательные вещества\nиз семечка на его спине."
+        assertEquals(expected, Gen5Text.mapRussian(encoded, Gen5Text.RussianBank.DEX_DESCRIPTIONS))
+        assertEquals(
+            "«Хулиган Морей»",
+            Gen5Text.mapRussian("«Öôìéãaî Íoñåê»", Gen5Text.RussianBank.DEX_DESCRIPTIONS),
+        )
+    }
+
+    @Test
+    fun decodesRussianAbilityAndSpeciesName() {
+        assertEquals(
+            "ПАХУЧЕСТЬ",
+            Gen5Text.mapRussian("ÐAÖÔØÅCÓÝ", Gen5Text.RussianBank.ABILITIES),
+        )
+        assertEquals(
+            "Бульбазавр",
+            Gen5Text.mapRussian("Áôìýáaèaâñ", Gen5Text.RussianBank.SPECIES_NAMES),
+        )
+    }
+
+    @Test
+    fun russianDetectionDoesNotTreatEnglishAsRussian() {
+        assertFalse(Gen5Text.isRussianBlackText(listOf("Stench", "Seed Pokémon")))
+        assertTrue(Gen5Text.isRussianBlackText(listOf("Ðoëå«oº Cå«åøëo")))
     }
 }
