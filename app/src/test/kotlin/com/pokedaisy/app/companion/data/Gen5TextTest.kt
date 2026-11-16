@@ -33,7 +33,7 @@ class Gen5TextTest {
     fun decodesRussianPokemonCategory() {
         assertEquals(
             "Покемон Семечко",
-            Gen5Text.mapRussian("Ðoëå«oº Cå«åøëo", Gen5Text.RussianBank.DEX_CATEGORIES),
+            Gen5Text.mapRussian("Ðoëå«oº Cå«åøëo"),
         )
     }
 
@@ -41,10 +41,10 @@ class Gen5TextTest {
     fun decodesRussianDexDescriptionAndKeepsQuotationMarks() {
         val encoded = "Îåëoóoñoå âñåíş ðocìå ñoçäåîéş, oî\nñacóàó, ðoìôøaş ðéóaóåìýîüå âåúåcóâa\néè cåíåøëa îa åão cðéîå."
         val expected = "Некоторое время после рождения, он\nрастёт, получая питательные вещества\nиз семечка на его спине."
-        assertEquals(expected, Gen5Text.mapRussian(encoded, Gen5Text.RussianBank.DEX_DESCRIPTIONS))
+        assertEquals(expected, Gen5Text.mapRussian(encoded))
         assertEquals(
             "«Хулиган Морей»",
-            Gen5Text.mapRussian("«Öôìéãaî Íoñåê»", Gen5Text.RussianBank.DEX_DESCRIPTIONS),
+            Gen5Text.mapRussian("«Öôìéãaî Íoñåê»"),
         )
     }
 
@@ -52,11 +52,11 @@ class Gen5TextTest {
     fun decodesRussianAbilityAndSpeciesName() {
         assertEquals(
             "ПАХУЧЕСТЬ",
-            Gen5Text.mapRussian("ÐAÖÔØÅCÓÝ", Gen5Text.RussianBank.ABILITIES),
+            Gen5Text.mapRussian("ÐAÖÔØÅCÓÝ"),
         )
         assertEquals(
             "Бульбазавр",
-            Gen5Text.mapRussian("Áôìýáaèaâñ", Gen5Text.RussianBank.SPECIES_NAMES),
+            Gen5Text.mapRussian("Áôìýáaèaâñ"),
         )
     }
 
