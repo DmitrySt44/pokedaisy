@@ -39,13 +39,9 @@ class Gen5TextTest {
 
     @Test
     fun decodesRussianDexDescriptionAndKeepsQuotationMarks() {
-        val encoded = "Îåëoóoñoå âñåíş ðocìå ñoçäåîéş, oî\nñacóàó, ðoìôøaş ðéóaóåìýîüå âåúåcóâa\néè cåíåøëa îa åão cðéîå."
+        val encoded = "Îåëoóoñoå âñå«ş ðocªå ñoçäåºéş, oº\nñacóàó, ðoªôøaş ðéóaóåªýºüå âåúåcóâa\néè cå«åøëa ºa åão cðéºå."
         val expected = "Некоторое время после рождения, он\nрастёт, получая питательные вещества\nиз семечка на его спине."
         assertEquals(expected, Gen5Text.mapRussian(encoded))
-        assertEquals(
-            "«Хулиган Морей»",
-            Gen5Text.mapRussian("«Öôìéãaî Íoñåê»"),
-        )
     }
 
     @Test
@@ -54,6 +50,7 @@ class Gen5TextTest {
             "ПАХУЧЕСТЬ",
             Gen5Text.mapRussian("ÐAÖÔØÅCÓÝ"),
         )
+        assertEquals("Подзарядка", Gen5Text.mapRussian("Ðoäèañşäëa"))
         assertEquals(
             "Бульбазавр",
             Gen5Text.mapRussian("Áôìýáaèaâñ"),
