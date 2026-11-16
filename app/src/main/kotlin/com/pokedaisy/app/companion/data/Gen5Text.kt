@@ -98,11 +98,7 @@ object Gen5Text {
     )
 
     internal fun mapRussian(text: String, bank: RussianBank): String {
-        val table = when (bank) {
-            RussianBank.SPECIES_NAMES, RussianBank.ABILITIES -> RUSSIAN_COMMON
-            RussianBank.DEX_DESCRIPTIONS -> RUSSIAN_COMMON
-            RussianBank.DEX_CATEGORIES -> RUSSIAN_COMMON + RUSSIAN_CATEGORY_EXTRA
-        }
+        val table = RUSSIAN_COMMON
         return buildString(text.length) {
             text.forEach { append(table[it.code] ?: it) }
         }
@@ -125,11 +121,8 @@ object Gen5Text {
         0x00F1 to 'р', 0x00F2 to 'ю', 0x00F3 to 'т', 0x00F4 to 'у',
         0x00F5 to 'ф', 0x00F6 to 'х', 0x00F8 to 'ч', 0x00F9 to 'ш',
         0x00FA to 'щ', 0x00FB to 'ъ', 0x00FC to 'ы', 0x00FD to 'ь',
-        0x00FE to 'э', 0x015E to 'Я', 0x015F to 'я',
-    )
-
-    private val RUSSIAN_CATEGORY_EXTRA = mapOf(
-        0x00AA to 'л', 0x00AB to 'м', 0x00BA to 'н', 0x00BB to 'ц',
+        0x00FE to 'э', 0x00AA to 'л', 0x00AB to 'м', 0x00BA to 'н', 0x00BB to 'ц',
+        0x015E to 'Я', 0x015F to 'я',
     )
 
     private fun u16(b: ByteArray, o: Int) = (b[o].toInt() and 0xFF) or ((b[o + 1].toInt() and 0xFF) shl 8)
