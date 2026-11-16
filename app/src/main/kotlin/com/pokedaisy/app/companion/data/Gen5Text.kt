@@ -10,8 +10,8 @@ package com.pokedaisy.app.companion.data
  *
  * The Russian Black translation uses a custom glyph table: its UTF-16 values are not Unicode Cyrillic. The mapping
  * below was reconstructed by aligning the translation project's converted strings with its Russian source strings.
- * Category labels have four additional glyphs (ª, «, º, »); in DEX descriptions « and » are literal quotation marks,
- * so those maps intentionally differ.
+ * The same glyph table is used by the Russian species names, DEX descriptions, categories and ability names. In
+ * particular, ª, «, º and » represent Cyrillic letters in the actual ROM, not punctuation.
  */
 object Gen5Text {
     enum class RussianBank {
@@ -97,10 +97,9 @@ object Gen5Text {
         0x00AA, 0x00AB, 0x00BA, 0x00BB, 0x00C1, 0x00D0, 0x00E5, 0x00EB, 0x015E,
     )
 
-    internal fun mapRussian(text: String, bank: RussianBank): String {
-        val table = RUSSIAN_COMMON
+    internal fun mapRussian(text: String): String {
         return buildString(text.length) {
-            text.forEach { append(table[it.code] ?: it) }
+            text.forEach { append(RUSSIAN_COMMON[it.code] ?: it) }
         }
     }
 
