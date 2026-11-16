@@ -742,9 +742,15 @@ object NdsArt {
      */
     private fun dexBlack(f: RandomAccessFile, header: ByteArray, dir: File, files: Gen5Files) {
         val msg = Narc(file(f, header, "/a/0/0/2") ?: return)
-        val text = msg.member(files.description)?.let { Gen5Text.lines(it) } ?: return
-        val category = msg.member(files.category)?.let { Gen5Text.lines(it) } ?: return
-        val abilities = msg.member(files.abilities)?.let { Gen5Text.lines(it) } ?: emptyList()
+        val text = msg.member(files.description)?.let {
+            Gen5Text.lines(it, Gen5Text.RussianBank.DEX_DESCRIPTIONS)
+        } ?: return
+        val category = msg.member(files.category)?.let {
+            Gen5Text.lines(it, Gen5Text.RussianBank.DEX_CATEGORIES)
+        } ?: return
+        val abilities = msg.member(files.abilities)?.let {
+            Gen5Text.lines(it, Gen5Text.RussianBank.ABILITIES)
+        } ?: emptyList()
         val personal = Narc(file(f, header, "/a/0/1/6") ?: return)
         val unova = personal.member(files.regional)?.takeIf { it.size >= 650 * 2 } ?: return
         val learnsets = Narc(file(f, header, "/a/0/1/8") ?: return)
@@ -1025,9 +1031,10 @@ object NdsArt {
         if (code in setOf("IRBO", "IRAO", "IRBF", "IRAF") && rev == 0 || portIs(code, rev, GameKind.BLACK, GameKind.WHITE) || sequel) {
             val banks = if (sequel) NAMES_BLACK2 else if (code[3] == 'J') NAMES_BLACK_JA else NAMES_BLACK
             val msg = Narc(file(f, header, banks.msg) ?: return null)
-            fun lines(bank: Int) = msg.member(bank)?.let { Gen5Text.lines(it) }.orEmpty()
+            fun lines(bank: Int, russianBank: Gen5Text.RussianBank? = null) =
+                msg.member(bank)?.let { Gen5Text.lines(it, russianBank) }.orEmpty()
             val types = lines(banks.types)
-            return Names(lines(banks.species), lines(banks.moves), lines(banks.items),
+            return Names(lines(banks.species, Gen5Text.RussianBank.SPECIES_NAMES), lines(banks.moves), lines(banks.items),
                 lines(banks.places), FIGHTING[types.getOrNull(1)?.trim()?.uppercase()] ?: 'E', gen5 = true, bw2 = sequel)
         }
         val banks = when {
