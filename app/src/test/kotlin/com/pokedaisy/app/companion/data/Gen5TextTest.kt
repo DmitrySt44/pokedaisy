@@ -101,6 +101,7 @@ class Gen5TextTest {
     fun mapsRussianPartyNicknameButLeavesEnglishNicknameAlone() {
         assertEquals("Бульбазавр", Gen5Text.mapRussianIfDetected("Áôìýáaèaâñ"))
         assertEquals("Bulbasaur", Gen5Text.mapRussianIfDetected("Bulbasaur"))
+        assertEquals("Árbol", Gen5Text.mapRussianIfDetected("Árbol"))
     }
 
     @Test
