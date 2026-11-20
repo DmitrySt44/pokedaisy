@@ -495,6 +495,7 @@ private fun gen4Crypt(raw: ByteArray, off: Int, len: Int, seed: Long): ByteArray
  * party's sixth slot ran past the read and threw, and the companion showed nothing). */
 fun decodeGen4PartyMon(
     raw: ByteArray, off: Int, maxSpecies: Int = 493, size: Int = GEN4_MON_SIZE, formSpecies: ((Int, Int) -> Int)? = null,
+    nicknameTransform: (String) -> String = { it },
 ): Mon? {
     if (off < 0 || off + size > raw.size) return null
     val personality = u32(raw, off)
@@ -550,7 +551,7 @@ fun decodeGen4PartyMon(
         personality = personality,
         isEgg = (ivWord ushr 30) and 1L != 0L,
         heldItem = u16(blocks, a + 2),
-        nickname = nickname.takeIf { it.isNotBlank() },
+        nickname = nicknameTransform(nickname).takeIf { it.isNotBlank() },
     )
 }
 
