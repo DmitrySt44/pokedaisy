@@ -98,6 +98,12 @@ class Gen5TextTest {
     }
 
     @Test
+    fun mapsRussianPartyNicknameButLeavesEnglishNicknameAlone() {
+        assertEquals("Бульбазавр", Gen5Text.mapRussianIfDetected("Áôìýáaèaâñ"))
+        assertEquals("Bulbasaur", Gen5Text.mapRussianIfDetected("Bulbasaur"))
+    }
+
+    @Test
     fun russianDetectionDoesNotTreatEnglishAsRussian() {
         assertFalse(Gen5Text.isRussianBlackText(listOf("Stench", "Seed Pokémon", "Árbol")))
         assertTrue(Gen5Text.isRussianBlackText(listOf("Ðoëå«oº Cå«åøëo")))
