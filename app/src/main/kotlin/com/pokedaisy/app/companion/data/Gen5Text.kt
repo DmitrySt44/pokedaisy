@@ -96,9 +96,17 @@ object Gen5Text {
     internal fun isRussianBlackText(lines: List<String>): Boolean =
         lines.any { '\u00D0' in it }
 
-    /** Apply the custom glyph table only when a string contains the Russian ROM's distinctive marker. */
-    internal fun mapRussianIfDetected(text: String): String =
-        if (isRussianBlackText(listOf(text))) mapRussian(text) else text
+    /**
+     * Party nicknames are read outside the message banks, so detect the custom alphabet from
+     * multiple mapped non-ASCII glyphs. A single accented character (for example in "Árbol")
+     * is not enough to classify ordinary localized text as Russian.
+     */
+    internal fun mapRussianIfDetected(text: String): String {
+        val customGlyphs = text.asSequence()
+            .filter { it.code > 0x7F && RUSSIAN_COMMON.containsKey(it.code) }
+            .toSet()
+        return if (customGlyphs.size >= 2 || isRussianBlackText(listOf(text))) mapRussian(text) else text
+    }
 
     internal fun mapRussian(text: String): String {
         return buildString(text.length) {
