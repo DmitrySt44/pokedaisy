@@ -96,6 +96,10 @@ object Gen5Text {
     internal fun isRussianBlackText(lines: List<String>): Boolean =
         lines.any { '\u00D0' in it }
 
+    /** Apply the custom glyph table only when a string contains the Russian ROM's distinctive marker. */
+    internal fun mapRussianIfDetected(text: String): String =
+        if (isRussianBlackText(listOf(text))) mapRussian(text) else text
+
     internal fun mapRussian(text: String): String {
         return buildString(text.length) {
             text.forEach { append(RUSSIAN_COMMON[it.code] ?: it) }
