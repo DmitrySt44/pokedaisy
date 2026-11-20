@@ -4640,6 +4640,13 @@ class PokeDaisyActivity : Activity() {
             menuKeyFor(newly)?.let { CoopBattles.takeKey(it) }
             return
         }
+        // The DS battle strip draws its own cursor. Route the on-screen D-pad/buttons through the same state
+        // as a physical controller, rather than letting the game move its hidden cursor underneath a stale overlay.
+        if (dsBattleMenu.mode != 0) {
+            input.setTouchBits(0)
+            menuKeyFor(newly)?.let { dsBattleMenu.key(it) }
+            return
+        }
         input.setTouchBits(gba, turbo)
     }
 
@@ -4647,7 +4654,10 @@ class PokeDaisyActivity : Activity() {
      * anything a menu over the game takes (the QUICK MENU, a co-op prompt) goes through the UI thread as before. */
     private fun onTouchKeysAnyThread(gba: Int, turbo: Int) {
         if (android.os.Looper.myLooper() == mainLooper) return onTouchKeys(gba, turbo)
-        if (quickMenu.open || coopOverlay.takesKeys) { runOnUiThread { onTouchKeys(gba, turbo) }; return }
+        if (quickMenu.open || coopOverlay.takesKeys || dsBattleMenu.mode != 0) {
+            runOnUiThread { onTouchKeys(gba, turbo) }
+            return
+        }
         touchHeld = gba
         input.setTouchBits(gba, turbo)
     }
